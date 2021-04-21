@@ -2,14 +2,20 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ApiResource()
+ * @UniqueEntity("email", message="L'utilisateur existe déjà !")
  */
 class User implements UserInterface
 {
@@ -17,11 +23,15 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"read:customer", "read:invoices", "invoices_subresources"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"read:customer", "read:invoices", "invoices_subresources"})
+     * @Assert\NotBlank(message="L'email ne doit pas être vide")
+     * @Assert\Email(message="L'adresse email doit être valide")
      */
     private $email;
 
@@ -38,11 +48,19 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read:customer", "read:invoices", "invoices_subresources"})
+     * @Assert\NotBlank(message="Le prénom ne doit pas être vide")
+     * @Assert\Length(min=3, minMessage="La longueur minimal doit être d'au moins 3 caractères et au max 255", max=255,
+     * maxMessage="La longueur minimal doit être d'au moins 3 caractères et au max 255")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read:customer", "read:invoices", "invoices_subresources"})
+     * @Assert\NotBlank(message="Le nom ne doit pas être vide")
+     * @Assert\Length(min=3, minMessage="La longueur minimal doit être d'au moins 3 caractères et au max 255", max=255,
+     * maxMessage="La longueur minimal doit être d'au moins 3 caractères et au max 255")
      */
     private $lastName;
 
