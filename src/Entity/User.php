@@ -14,7 +14,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *     normalizationContext={"groups"={"read:user"}}
+ * )
  * @UniqueEntity("email", message="L'utilisateur existe déjà !")
  */
 class User implements UserInterface
@@ -23,13 +25,13 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"read:customer", "read:invoices", "invoices_subresources"})
+     * @Groups({"read:customer", "read:invoices", "invoices_subresources", "read:user"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"read:customer", "read:invoices", "invoices_subresources"})
+     * @Groups({"read:customer", "read:invoices", "invoices_subresources", "read:user"})
      * @Assert\NotBlank(message="L'email ne doit pas être vide")
      * @Assert\Email(message="L'adresse email doit être valide")
      */
@@ -48,7 +50,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"read:customer", "read:invoices", "invoices_subresources"})
+     * @Groups({"read:customer", "read:invoices", "invoices_subresources", "read:user"})
      * @Assert\NotBlank(message="Le prénom ne doit pas être vide")
      * @Assert\Length(min=3, minMessage="La longueur minimal doit être d'au moins 3 caractères et au max 255", max=255,
      * maxMessage="La longueur minimal doit être d'au moins 3 caractères et au max 255")
@@ -57,7 +59,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"read:customer", "read:invoices", "invoices_subresources"})
+     * @Groups({"read:customer", "read:invoices", "invoices_subresources", "read:user"})
      * @Assert\NotBlank(message="Le nom ne doit pas être vide")
      * @Assert\Length(min=3, minMessage="La longueur minimal doit être d'au moins 3 caractères et au max 255", max=255,
      * maxMessage="La longueur minimal doit être d'au moins 3 caractères et au max 255")
