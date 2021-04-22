@@ -15,7 +15,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         registration:
-            pattern: ^/api/login
+            pattern: ^/api/users
             stateless: true
             anonymous: true
             methods: [POST]
