@@ -9,11 +9,11 @@ function CustomersPage({customers, fetchCustomer, deleteCustomers}) {
     const [search, setSearch] = useState('');
 
     useEffect(() => {
-        fetchCustomer()
-    }, [fetchCustomer])
+        fetchCustomer(localStorage.getItem('authToken'))
+    }, [])
 
     const handleDelete = (id) => {
-        deleteCustomers(id);
+        deleteCustomers(id, localStorage.getItem('authToken'));
     }
     const itemsPerPage = 10;
 
@@ -91,14 +91,14 @@ function CustomersPage({customers, fetchCustomer, deleteCustomers}) {
 
 const mapStateToProps = state => {
     return {
-        customers: state.customer
+        customers: state.customer,
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        fetchCustomer: () => dispatch(fetchCustomers()),
-        deleteCustomers: (id) => dispatch(deleteCustomers(id)),
+        fetchCustomer: (bearer_token) => dispatch(fetchCustomers(bearer_token)),
+        deleteCustomers: (id, bearer_token) => dispatch(deleteCustomers(id, bearer_token)),
     }
 }
 

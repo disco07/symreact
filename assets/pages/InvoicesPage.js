@@ -4,7 +4,7 @@ import {deleteInvoices, fetchInvoices} from "../redux/action/action";
 import {connect} from "react-redux";
 import moment from "moment";
 
-function InvoicesPage({invoices, fetchInvoices, deleteInvoices}) {
+function InvoicesPage({invoices, fetchInvoices, deleteInvoices, user}) {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [search, setSearch] = useState('');
@@ -22,11 +22,11 @@ function InvoicesPage({invoices, fetchInvoices, deleteInvoices}) {
     }
 
     useEffect(() => {
-        fetchInvoices()
+        fetchInvoices(localStorage.getItem('authToken'))
     }, [fetchInvoices])
 
     const handleDelete = (id) => {
-        deleteInvoices(id);
+        deleteInvoices(id, localStorage.getItem('authToken'));
     }
     const itemsPerPage = 20;
 
@@ -107,14 +107,14 @@ function InvoicesPage({invoices, fetchInvoices, deleteInvoices}) {
 
 const mapStateToProps = state => {
     return {
-        invoices: state.invoices
+        invoices: state.invoices,
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        fetchInvoices: () => dispatch(fetchInvoices()),
-        deleteInvoices: (id) => dispatch(deleteInvoices(id)),
+        fetchInvoices: (bearer_token) => dispatch(fetchInvoices(bearer_token)),
+        deleteInvoices: (id, bearer_token) => dispatch(deleteInvoices(id, bearer_token)),
     }
 }
 

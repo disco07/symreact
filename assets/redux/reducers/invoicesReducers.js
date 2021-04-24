@@ -6,7 +6,7 @@ const initialState = {
     items: [],
 }
 
-const customerReducers = (state = initialState, action) => {
+const invoicesReducers = (state = initialState, action) => {
     switch (action.type) {
         case LOAD_INVOICES:
             return {
@@ -25,4 +25,4 @@ const customerReducers = (state = initialState, action) => {
     }
 }
 
-export default customerReducers;
+export default invoicesReducers;
