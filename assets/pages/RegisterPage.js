@@ -3,8 +3,9 @@ import Field from "../components/forms/Field";
 import {connect} from "react-redux";
 import {registerUser} from "../redux/action/action";
 import {Link} from "react-router-dom";
+import {toast} from "react-toastify";
 
-function RegisterPage({users, registerUser}) {
+function RegisterPage({users, registerUser, history}) {
     const [user, setUser] = useState({
         "firstName": "",
         "lastName": "",
@@ -27,6 +28,7 @@ function RegisterPage({users, registerUser}) {
                 apiError[propertyPath] = message
             })
             setError(apiError);
+            toast.error('Une erreur est survénue')
         }
     }, [users.error])
 
@@ -39,10 +41,17 @@ function RegisterPage({users, registerUser}) {
         if (user.password !== user.passwordConfirm) {
             apiError.passwordConfirm = "Les mots de passe ne sont pas identiques";
             setError(apiError);
+            toast.error('Une erreur est survénue')
             return;
         }
-        registerUser(user);
-        setError({});
+        registerUser(user).then((res) => {
+            if (res === undefined) {
+                setError({});
+                toast.success('Votre inscription est validée')
+                history.replace('/login')
+            }
+        })
+
     }
 
     return (
@@ -77,13 +86,14 @@ function RegisterPage({users, registerUser}) {
                        error={error.password}
                        type="password"
                        placeholder="Veillez saisir votre mot de passe"/>
-                <Field name="password"
+                <Field name="passwordConfirm"
+                       id="passwordConfirm"
                        value={user.passwordConfirm}
                        label="Confirmation de mot de passe"
                        onChange={handleChange}
                        error={error.passwordConfirm}
                        type="password"
-                       placeholder="Veillez confirmer votre mot de passe" />
+                       placeholder="Veillez confirmer votre mot de passe"/>
                 <div className="form-group">
                     <button className="btn btn-success">S'inscrire</button>
                     <Link to="/login" className="btn btn-link">J'ai déjà un compte</Link>

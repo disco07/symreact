@@ -2,6 +2,7 @@ import {USER_CONNECTED, USER_ERROR} from "../constants/constants";
 
 const initialState = {
     isLoading: false,
+    user: '',
     error: [],
 }
 
@@ -12,13 +13,12 @@ const userReducers = (state= initialState, action) => {
                 ...state,
                 isLoading: false,
                 error: action.data,
-                user: ''
             }
         case USER_CONNECTED:
             return {
                 ...state,
                 isLoading: false,
-                error: ""
+                user: action.user,
             }
         default:
             return {

@@ -1,8 +1,8 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 import Navabar from "./components/Navabar";
 import HomePage from "./pages/HomePage";
-import {HashRouter, Switch, Route, withRouter, Redirect} from "react-router-dom";
+import {HashRouter, Switch, Route, withRouter} from "react-router-dom";
 import CustomersPage from "./pages/CustomersPage";
 import store from "./redux/store";
 import {Provider} from "react-redux";
@@ -14,6 +14,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import CustomerPage from "./pages/CustomerPage";
 import InvoicePage from "./pages/InvoicePage";
 import RegisterPage from "./pages/RegisterPage";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 services.setup();
 
@@ -42,6 +44,7 @@ const App = () => {
                 </main>
             </Provider>
         </HashRouter>
+            <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} />
         </authContext.Provider>
     );
 };

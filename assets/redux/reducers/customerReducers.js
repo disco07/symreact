@@ -1,4 +1,10 @@
-import {CREATE_CUSTOMERS, CREATE_ERROR_CUSTOMERS, DELETE_CUSTOMERS, LOAD_CUSTOMERS} from "../constants/constants";
+import {
+    CREATE_CUSTOMERS,
+    CREATE_ERROR_CUSTOMERS,
+    DELETE_CUSTOMERS,
+    GET_CUSTOMERS,
+    LOAD_CUSTOMERS
+} from "../constants/constants";
 
 
 const initialState = {
@@ -10,6 +16,11 @@ const initialState = {
 const customerReducers = (state = initialState, action) => {
     switch (action.type) {
         case LOAD_CUSTOMERS:
+            return {
+                ...state,
+                isLoading: true,
+            }
+        case GET_CUSTOMERS:
             return {
                 ...state,
                 items: action.items,

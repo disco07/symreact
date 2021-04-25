@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import {deleteCustomers, fetchCustomers} from "../redux/action/action";
 import Pagination from "../components/Pagination";
 import {Link} from "react-router-dom";
+import TableLoader from "../components/loader/TableLoader";
 
 function CustomersPage({customers, fetchCustomer, deleteCustomers}) {
 
@@ -49,57 +50,66 @@ function CustomersPage({customers, fetchCustomer, deleteCustomers}) {
                        placeholder="Rechercher un client"
                        value={search} onChange={handleSearch}/>
             </div>
-            <table className="table table-hover">
-                <thead>
-                <tr>
-                    <th>id</th>
-                    <th>Client</th>
-                    <th>Email</th>
-                    <th>Entreprise</th>
-                    <th className="text-center">Factures</th>
-                    <th className="text-center">Montant total</th>
-                    <th/>
-                </tr>
-                </thead>
-                <tbody>
-                {paginatedCustomers.map((customer, index) => {
-                    return (
-                        <tr key={index}>
-                            <td>{customer.id}</td>
-                            <td><a href="#">{customer.firstName + " " + customer.lastName}</a></td>
-                            <td>{customer.email}</td>
-                            <td>{customer.company}</td>
-                            <td className="text-center"><span
-                                className="badge badge-primary">{customer.invoices.length}</span></td>
-                            <td className="text-center">{customer.totalAmount.toLocaleString()} €</td>
-                            <td>
-                                <button
-                                    disabled={customer.invoices.length > 0}
-                                    onClick={() => handleDelete(customer.id)}
-                                    className="btn btn-sm btn-danger">Supprimer
-                                </button>
-                            </td>
-                        </tr>
-                    )
-                })}
-                </tbody>
-            </table>
             {
-                filteredCustomers.length > itemsPerPage &&
+                customers.isLoading && <TableLoader/>
+            }
+            {
+                !customers.isLoading &&
+                <table className="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Client</th>
+                        <th>Email</th>
+                        <th>Entreprise</th>
+                        <th className="text-center">Factures</th>
+                        <th className="text-center">Montant total</th>
+                        <th/>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {paginatedCustomers.map((customer, index) => {
+                        return (
+                            <tr key={index}>
+                                <td>{customer.id}</td>
+                                <td><Link to={"/customers/"+customer.id}>{customer.firstName + " " + customer.lastName}</Link></td>
+                                <td>{customer.email}</td>
+                                <td>{customer.company}</td>
+                                <td className="text-center"><span
+                                    className="badge badge-primary">{customer.invoices.length}</span></td>
+                                <td className="text-center">{customer.totalAmount.toLocaleString()} €</td>
+                                <td>
+                                    <button
+                                        disabled={customer.invoices.length > 0}
+                                        onClick={() => handleDelete(customer.id)}
+                                        className="btn btn-sm btn-danger">Supprimer
+                                    </button>
+                                </td>
+                            </tr>
+                        )
+                    })}
+                    </tbody>
+                </table>
+            }
+            {
+                !customers.isLoading &&
+                (filteredCustomers.length > itemsPerPage &&
                 <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage} length={filteredCustomers.length}
-                            onPageChange={handleChangePage}/>
+                            onPageChange={handleChangePage}/>)
             }
         </>
     );
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = state =>
+{
     return {
         customers: state.customer,
     }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = dispatch =>
+{
     return {
         fetchCustomer: (bearer_token) => dispatch(fetchCustomers(bearer_token)),
         deleteCustomers: (id, bearer_token) => dispatch(deleteCustomers(id, bearer_token)),

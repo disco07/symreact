@@ -1,6 +1,6 @@
 import {
     CREATE_ERROR_INVOICES, CREATE_INVOICES,
-    DELETE_INVOICES,
+    DELETE_INVOICES, GET_INVOICES,
     LOAD_INVOICES
 } from "../constants/constants";
 
@@ -14,6 +14,11 @@ const initialState = {
 const invoicesReducers = (state = initialState, action) => {
     switch (action.type) {
         case LOAD_INVOICES:
+            return {
+                ...state,
+                isLoading: true,
+            }
+        case GET_INVOICES:
             return {
                 ...state,
                 items: action.items,

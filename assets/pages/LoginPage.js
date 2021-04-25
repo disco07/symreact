@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import {loginUser} from "../redux/action/action";
 import authContext from "../contexts/authContext";
 import Field from "../components/forms/Field";
+import {toast} from "react-toastify";
 
 function LoginPage({loginUser, user, history}) {
 
@@ -22,15 +23,21 @@ function LoginPage({loginUser, user, history}) {
     const handleSubmit = (e) => {
         e.preventDefault();
         loginUser(credentials)
-        setIsAuthenticated(true)
-        history.replace('/')
+            .then((response) => {
+                if (response.user.token) {
+                    toast.success('Vous êtes connecté(e)')
+                    setIsAuthenticated(true)
+                    history.replace('/')
+                }
+            })
     }
 
     useEffect(() => {
-        if(user.error){
+        if(user.error.length !== 0){
             setError("Aucun compte ne possède cette adresse email ou les informations ne correspondent pas")
+            toast.error('Une erreur est survénue')
         }
-    },[user.error])
+    },[user.error.length])
 
     return (
         <>

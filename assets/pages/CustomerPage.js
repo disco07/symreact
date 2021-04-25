@@ -3,6 +3,8 @@ import Field from "../components/forms/Field";
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import {createCustomer, fetchCustomers, putCustomers} from "../redux/action/action";
+import {toast} from "react-toastify";
+import FormContentLoader from "../components/loader/FormContentLoader";
 
 function CustomerPage({createCustomer, fetchCustomers, putCustomers, customers, match, history}) {
 
@@ -14,7 +16,7 @@ function CustomerPage({createCustomer, fetchCustomers, putCustomers, customers, 
         email: '',
         company: '',
     });
-
+    const [isLoading, setIsLoading] = useState(false);
     const fetchCustomer = async (id) => {
         try {
             await fetchCustomers(localStorage.getItem('authToken'))
@@ -22,14 +24,16 @@ function CustomerPage({createCustomer, fetchCustomers, putCustomers, customers, 
                     const {lastName, firstName, email, company} = response.items.filter(c => c.id === parseInt(id))[0];
                     setCustomer({lastName, firstName, email, company});
                 })
+            setIsLoading(false);
         }
         catch (e) {
-            console.log(e)
+            toast.error('Une erreur est survénue')
         }
     }
 
     useEffect(() => {
         if (id !== "new") {
+            setIsLoading(true);
             setEditing(true);
             fetchCustomer(id);
         }
@@ -49,6 +53,7 @@ function CustomerPage({createCustomer, fetchCustomers, putCustomers, customers, 
                 apiError[propertyPath] = message
             })
             setError(apiError);
+            toast.error('Une erreur est survénue')
         }
     }, [customers.error])
 
@@ -67,37 +72,43 @@ function CustomerPage({createCustomer, fetchCustomers, putCustomers, customers, 
                 editing &&
                 <h1>Modifcation d'un client</h1> || <h1>Création d'un client</h1>
             }
-            <form onSubmit={handleSubmit}>
-                <Field value={customer.lastName}
-                       onChange={handleChange}
-                       name="lastName"
-                       placeholder="Entrer votre nom de famille"
-                       error={error.lastName}
-                       label="Nom du client"/>
-                <Field value={customer.firstName}
-                       onChange={handleChange}
-                       name="firstName"
-                       placeholder="Entrer votre prénom"
-                       error={error.firstName}
-                       label="Prénom du client"/>
-                <Field value={customer.email}
-                       onChange={handleChange}
-                       name="email"
-                       placeholder="Entrer l'adresse mail"
-                       error={error.email}
-                       label="E-mail du client"
-                       type="email"/>
-                <Field value={customer.company}
-                       onChange={handleChange}
-                       name="company"
-                       placeholder="Entreprise du client"
-                       error={error.company}
-                       label="Entreprise du client"/>
-                <div className="form-group">
-                    <button className="btn btn-success">Enregistrer</button>
-                    <Link to="/customers" className="btn btn-link">Retour à la liste</Link>
-                </div>
-            </form>
+            {
+                isLoading && <FormContentLoader />
+            }
+            {
+                !isLoading &&
+                <form onSubmit={handleSubmit}>
+                    <Field value={customer.lastName}
+                           onChange={handleChange}
+                           name="lastName"
+                           placeholder="Entrer votre nom de famille"
+                           error={error.lastName}
+                           label="Nom du client"/>
+                    <Field value={customer.firstName}
+                           onChange={handleChange}
+                           name="firstName"
+                           placeholder="Entrer votre prénom"
+                           error={error.firstName}
+                           label="Prénom du client"/>
+                    <Field value={customer.email}
+                           onChange={handleChange}
+                           name="email"
+                           placeholder="Entrer l'adresse mail"
+                           error={error.email}
+                           label="E-mail du client"
+                           type="email"/>
+                    <Field value={customer.company}
+                           onChange={handleChange}
+                           name="company"
+                           placeholder="Entreprise du client"
+                           error={error.company}
+                           label="Entreprise du client"/>
+                    <div className="form-group">
+                        <button className="btn btn-success">Enregistrer</button>
+                        <Link to="/customers" className="btn btn-link">Retour à la liste</Link>
+                    </div>
+                </form>
+            }
         </>
     );
 }

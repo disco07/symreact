@@ -1,7 +1,7 @@
 import {
     CREATE_CUSTOMERS, CREATE_ERROR_CUSTOMERS, CREATE_ERROR_INVOICES, CREATE_INVOICES,
     DELETE_CUSTOMERS,
-    DELETE_INVOICES,
+    DELETE_INVOICES, GET_CUSTOMERS, GET_INVOICES,
     LOAD_CUSTOMERS,
     LOAD_INVOICES,
     USER_CONNECTED,
@@ -9,9 +9,16 @@ import {
 } from "../constants/constants";
 import {LOCALHOST} from "../../config";
 
-export const getCustomers = (data) => {
+
+export const loadCustomers = () => {
     return {
         type: LOAD_CUSTOMERS,
+    }
+}
+
+export const getCustomers = (data) => {
+    return {
+        type: GET_CUSTOMERS,
         items: data,
     }
 }
@@ -37,9 +44,15 @@ export const deleteCustomer = (id) => {
     }
 }
 
-export const getInvoices = (data) => {
+export const loadInvoices = () => {
     return {
         type: LOAD_INVOICES,
+    }
+}
+
+export const getInvoices = (data) => {
+    return {
+        type: GET_INVOICES,
         items: data,
     }
 }
@@ -82,6 +95,7 @@ export const errorLogin = (data) => {
 const bearer = (bearer_token) => 'Bearer ' + bearer_token;
 
 export const fetchCustomers = (bearer_token) => dispatch => {
+    dispatch(loadCustomers())
     return fetch(LOCALHOST + '/api/customers', {
         method: 'GET',
         headers: {
@@ -156,6 +170,7 @@ export const deleteCustomers = (id, bearer_token) => dispatch => {
 }
 
 export const fetchInvoices = (bearer_token) => dispatch => {
+    dispatch(loadInvoices())
     return fetch(LOCALHOST + '/api/invoices', {
         method: 'GET',
         headers: {
@@ -271,6 +286,8 @@ export const registerUser = (data) => dispatch => {
             if (response.status === 201) {
                 return dispatch(login(response))
             }
-            return dispatch(errorLogin(response.violations))
+            if (response.violations) {
+                return dispatch(errorLogin(response.violations))
+            }
         })
 }
