@@ -2,8 +2,7 @@ import {USER_CONNECTED, USER_ERROR} from "../constants/constants";
 
 const initialState = {
     isLoading: false,
-    user: '',
-    error: '',
+    error: [],
 }
 
 const userReducers = (state= initialState, action) => {
@@ -16,11 +15,9 @@ const userReducers = (state= initialState, action) => {
                 user: ''
             }
         case USER_CONNECTED:
-            window.localStorage.setItem('authToken', action.user.token)
             return {
                 ...state,
                 isLoading: false,
-                user: action.user,
                 error: ""
             }
         default:

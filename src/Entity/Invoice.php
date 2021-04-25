@@ -47,7 +47,7 @@ class Invoice
      * @ORM\Column(type="datetime")
      * @Groups({"read:invoices", "read:customer", "invoices_subresources"})
      * @Assert\NotBlank(message="La date ne doit pas être vide")
-     * @Assert\DateTime(message="Veillez ecrire une date valide")
+     * @Assert\Type(type="\DateTime", message="Veillez ecrire une date valide")
      */
     private $sentAt;
 

@@ -3,6 +3,7 @@ import Pagination from "../components/Pagination";
 import {deleteInvoices, fetchInvoices} from "../redux/action/action";
 import {connect} from "react-redux";
 import moment from "moment";
+import {Link} from "react-router-dom";
 
 function InvoicesPage({invoices, fetchInvoices, deleteInvoices, user}) {
 
@@ -51,11 +52,14 @@ function InvoicesPage({invoices, fetchInvoices, deleteInvoices, user}) {
 
     return (
         <>
-            <h1>Liste des factures</h1>
+            <div className="mb-3 d-flex justify-content-between align-items-center">
+                <h1>Liste des factures</h1>
+                <Link to="/invoices/new" className="btn btn-primary"> Créer une facture</Link>
+            </div>
             <div className="form-group">
                 <input type="text"
                        className="form-control"
-                       placeholder="Rechercher un client"
+                       placeholder="Rechercher une facture"
                        value={search} onChange={handleSearch}/>
             </div>
             <table className="table table-hover">
@@ -74,7 +78,7 @@ function InvoicesPage({invoices, fetchInvoices, deleteInvoices, user}) {
                     return (
                         <tr key={index}>
                             <td>{invoice.id}</td>
-                            <td><a href="#">{invoice.user.firstName + " " + invoice.user.lastName}</a></td>
+                            <td><a href="#">{invoice.customer.firstName + " " + invoice.customer.lastName}</a></td>
                             <td className="text-center">{moment(invoice.sentAt).format("DD/MM/YYYY")}</td>
                             <td className="text-center">
                                 <span
@@ -82,10 +86,9 @@ function InvoicesPage({invoices, fetchInvoices, deleteInvoices, user}) {
                             </td>
                             <td className="text-center">{invoice.amount.toLocaleString()} €</td>
                             <td>
-                                <button
-                                    onClick={() => handleDelete(invoice.id)}
+                                <Link to={"/invoices/" + invoice.id}
                                     className="btn btn-sm btn-success mr-1">Editer
-                                </button>
+                                </Link>
                                 <button
                                     onClick={() => handleDelete(invoice.id)}
                                     className="btn btn-sm btn-danger">Supprimer

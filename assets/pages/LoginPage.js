@@ -1,7 +1,8 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import {loginUser} from "../redux/action/action";
 import authContext from "../contexts/authContext";
+import Field from "../components/forms/Field";
 
 function LoginPage({loginUser, user, history}) {
 
@@ -10,6 +11,7 @@ function LoginPage({loginUser, user, history}) {
         username: '',
         password: ''
     });
+    const [error, setError] = useState('')
 
     const handleChange = (e) => {
         const value = e.target.value;
@@ -24,30 +26,33 @@ function LoginPage({loginUser, user, history}) {
         history.replace('/')
     }
 
+    useEffect(() => {
+        if(user.error){
+            setError("Aucun compte ne possède cette adresse email ou les informations ne correspondent pas")
+        }
+    },[user.error])
+
     return (
         <>
             <h1>Page de connexion</h1>
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="username">E-mail</label>
-                    <input type="email"
-                           value={credentials.username}
-                           onChange={handleChange}
-                           placeholder="Entrer votre identifiant"
-                           id="username" name="username"
-                           className={"form-control" + (user.error && " is-invalid")}/>
-                    {user.error && <p className="invalid-feedback">Aucun compte ne possède cette adresse email ou les informations ne correspondent pas</p>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Mot de passe</label>
-                    <input type="password"
-                           value={credentials.password}
-                           onChange={handleChange}
-                           placeholder="Entrer votre mot de passe"
-                           id="password"
-                           name="password"
-                           className="form-control"/>
-                </div>
+                <Field
+                    value={credentials.username}
+                    onChange={handleChange}
+                    error={error}
+                    label="E-mail"
+                    name="username"
+                    placeholder="Entrer votre identifiant"
+                    type="email" />
+                <Field
+                    value={credentials.password}
+                    onChange={handleChange}
+                    error={error}
+                    label="Mot de passe"
+                    name="password"
+                    placeholder="Entrer votre mot de passe"
+                    type="password" />
+
                 <div className="form-group">
                     <button disabled={credentials.username === '' || credentials.password === ''}
                             className="btn btn-success">

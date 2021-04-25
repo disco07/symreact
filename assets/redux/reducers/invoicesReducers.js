@@ -1,9 +1,14 @@
-import {DELETE_CUSTOMERS, DELETE_INVOICES, LOAD_CUSTOMERS, LOAD_INVOICES} from "../constants/constants";
+import {
+    CREATE_ERROR_INVOICES, CREATE_INVOICES,
+    DELETE_INVOICES,
+    LOAD_INVOICES
+} from "../constants/constants";
 
 
 const initialState = {
     isLoading: false,
     items: [],
+    error: []
 }
 
 const invoicesReducers = (state = initialState, action) => {
@@ -19,6 +24,18 @@ const invoicesReducers = (state = initialState, action) => {
             return {
                 ...state,
                 items: newItems,
+            }
+        case CREATE_INVOICES:
+            return {
+                ...state,
+                items: [...state.items, action.items],
+                isLoading: false,
+            }
+        case CREATE_ERROR_INVOICES:
+            return {
+                ...state,
+                error: action.error,
+                isLoading: false,
             }
         default:
             return state

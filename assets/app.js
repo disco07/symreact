@@ -11,6 +11,9 @@ import LoginPage from "./pages/LoginPage";
 import services from "./services/services";
 import authContext from "./contexts/authContext";
 import PrivateRoute from "./components/PrivateRoute";
+import CustomerPage from "./pages/CustomerPage";
+import InvoicePage from "./pages/InvoicePage";
+import RegisterPage from "./pages/RegisterPage";
 
 services.setup();
 
@@ -29,7 +32,10 @@ const App = () => {
                 <main className="container pt-4">
                     <Switch>
                         <Route path="/login" component={LoginPage}/>
+                        <Route path="/register" component={RegisterPage}/>
+                        <PrivateRoute path="/invoices/:id" component={InvoicePage}/>
                         <PrivateRoute path="/invoices" component={InvoicesPage}/>
+                        <PrivateRoute path="/customers/:id" component={CustomerPage}/>
                         <PrivateRoute path="/customers" component={CustomersPage}/>
                         <Route path="/" component={HomePage}/>
                     </Switch>

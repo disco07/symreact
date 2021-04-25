@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import {deleteCustomers, fetchCustomers} from "../redux/action/action";
 import Pagination from "../components/Pagination";
+import {Link} from "react-router-dom";
 
 function CustomersPage({customers, fetchCustomer, deleteCustomers}) {
 
@@ -38,7 +39,10 @@ function CustomersPage({customers, fetchCustomer, deleteCustomers}) {
 
     return (
         <>
-            <h1>Listes des clients</h1>
+            <div className="mb-3 d-flex justify-content-between align-items-center">
+                <h1>Listes des clients</h1>
+                <Link to="/customers/new" className="btn btn-primary"> Créer un client</Link>
+            </div>
             <div className="form-group">
                 <input type="text"
                        className="form-control"
